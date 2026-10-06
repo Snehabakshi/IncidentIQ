@@ -1,0 +1,30 @@
+# Personal working files (not for the public repo)
+Context.md
+Progress.md
+SPEC.md
+BUILD_PLAN.md
+notes/
+
+# Secrets and local config
+.env
+*.env
+application-local.yml
+application-local.properties
+
+# Java / Maven
+target/
+*.class
+*.log
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Frontend (later)
+node_modules/
+dist/
+.angular/
