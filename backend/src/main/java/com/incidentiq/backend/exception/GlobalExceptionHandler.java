@@ -26,5 +26,18 @@ public class GlobalExceptionHandler {
         problem.setProperty("errors",errors);
         return problem;
     }
+    @ExceptionHandler(TenantNotFoundException.class)
+    public ProblemDetail handleTenantNotFound(TenantNotFoundException ex){
+        ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,ex.getMessage());
+        problem.setTitle("Tenant Not Found");
+        return problem;
+    }
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ProblemDetail handleEmailExists(EmailAlreadyExistsException  ex){
+        ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT,ex.getMessage());
+        problem.setTitle("Email Already Registered");
+        return problem;
+
+    }
 
 }
