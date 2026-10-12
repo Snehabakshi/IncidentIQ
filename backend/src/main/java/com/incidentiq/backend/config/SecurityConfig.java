@@ -1,0 +1,35 @@
+package com.incidentiq.backend.config;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http ) throws Exception{
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/api/v1/tenants/**",
+                                "/api/v1/ping",
+                                "/api/v1/hello",
+                                "/actuator/health/**").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth ->oauth.jwt(Customizer.withDefaults()));
+        return http.build();
+    }
+
+
+}
