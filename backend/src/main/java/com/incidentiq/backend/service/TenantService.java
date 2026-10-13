@@ -27,12 +27,6 @@ public class TenantService {
        Tenant saved= tenantRepository.save(new Tenant (name));
        return TenantResponse.from(saved);
    }
-   @Transactional(readOnly = true)
-    public List<TenantResponse> listTenants(){
-       return tenantRepository.findAll()
-               .stream()
-               .map(TenantResponse:: from)
-               .toList();
-   }
+
 
 }

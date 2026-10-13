@@ -27,8 +27,5 @@ public class TenantController {
         return tenantService.createTenant(request);
     }
 
-    @GetMapping
-    public List<TenantResponse> list(){
-        return tenantService.listTenants();
-    }
+
 }
