@@ -35,7 +35,7 @@ public class Event {
     @Column(nullable=false,columnDefinition = "text")
     private String message;
 
-    @Column(name="occured_at",nullable=false)
+    @Column(name="occurred_at",nullable=false)
     private Instant occurredAt;
 
     @Column(name = "received_at", nullable = false)
