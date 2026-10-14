@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<Event, UUID> {
-    boolean existsByTenantIdAndExternalId(UUID tenantId, String externalId);
+    boolean existsByTenantIdAndServiceAndExternalId(UUID tenantId, String service, String externalId);
     List<Event> findTop50ByTenantIdOrderByReceivedAtDesc(UUID tenantId);
 }
