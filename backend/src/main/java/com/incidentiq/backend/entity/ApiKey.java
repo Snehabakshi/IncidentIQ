@@ -41,7 +41,7 @@ public class ApiKey {
     protected ApiKey(){
 
     }
-    public ApiKey(UUID tenantId,String name,String KeyPrefix,String keyHash){
+    public ApiKey(UUID tenantId,String name,String keyPrefix,String keyHash){
         this.tenantId=tenantId;
         this.name=name;
         this.keyPrefix=keyPrefix;

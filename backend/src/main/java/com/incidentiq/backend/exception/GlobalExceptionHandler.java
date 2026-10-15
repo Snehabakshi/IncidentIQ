@@ -45,5 +45,11 @@ public class GlobalExceptionHandler {
         problem.setTitle("Authentication failed");
         return problem;
     }
+    @ExceptionHandler(ApiKeyNotFoundException.class)
+    public ProblemDetail handleKeyNotFound(ApiKeyNotFoundException ex){
+        ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,ex.getMessage());
+        problem.setTitle("API KEY not found");
+        return problem;
+    }
 
 }
