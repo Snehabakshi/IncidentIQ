@@ -46,8 +46,10 @@ public class Event {
 
     @Column(name="external_id")
     private String externalId;
+
     @Column(name="incident_id")
     private UUID incidentId;
+
     protected Event(){
 
     }
