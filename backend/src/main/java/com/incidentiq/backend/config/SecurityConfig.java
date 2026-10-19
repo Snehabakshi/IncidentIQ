@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 "/api/v1/auth/signup",
                                 "/api/v1/ping",
                                 "/api/v1/hello",
+                                "/error",
                                 "/actuator/health/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth ->oauth.jwt(jwt ->jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));

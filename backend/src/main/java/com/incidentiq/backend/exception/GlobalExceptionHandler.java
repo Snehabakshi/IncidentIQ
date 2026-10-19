@@ -2,6 +2,7 @@ package com.incidentiq.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -49,6 +50,12 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleKeyNotFound(ApiKeyNotFoundException ex){
         ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,ex.getMessage());
         problem.setTitle("API KEY not found");
+        return problem;
+    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail handleUnreadableBody(HttpMessageNotReadableException ex){
+        ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,"Request body is missing, malformed, or has an invalid value");
+        problem.setTitle("Invalid request");
         return problem;
     }
 
