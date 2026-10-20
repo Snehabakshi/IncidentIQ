@@ -10,6 +10,7 @@ notes/
 *.env
 application-local.yml
 application-local.properties
+tools/simulator/simulator.properties
 
 # Java / Maven
 target/
