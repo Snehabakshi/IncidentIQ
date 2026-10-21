@@ -15,6 +15,11 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: incidentiq-kafka
+    ports:
+      - "9092:9092"
 
 
 volumes:
