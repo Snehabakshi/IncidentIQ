@@ -4,8 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -16,7 +14,6 @@ import java.util.UUID;
 @Table(name="events")
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name="tenant_id",nullable = false)
@@ -53,8 +50,9 @@ public class Event {
     protected Event(){
 
     }
-    public Event(UUID tenantId, UUID apiKeyId, String service, Severity severity,
-                 String message, Instant occurredAt, String externalId) {
+    public Event(UUID id,UUID tenantId, UUID apiKeyId, String service, Severity severity,
+                 String message, Instant occurredAt, String externalId,Instant receivedAt) {
+        this.id=id;
         this.tenantId = tenantId;
         this.apiKeyId = apiKeyId;
         this.service = service;
@@ -62,7 +60,7 @@ public class Event {
         this.message = message;
         this.occurredAt = occurredAt;
         this.externalId = externalId;
-        this.receivedAt = Instant.now();
+        this.receivedAt = receivedAt;
     }
     public UUID getId() { return id; }
     public UUID getTenantId() { return tenantId; }

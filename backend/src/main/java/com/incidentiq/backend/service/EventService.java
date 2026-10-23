@@ -3,6 +3,8 @@ package com.incidentiq.backend.service;
 import com.incidentiq.backend.dto.CreateEventRequest;
 import com.incidentiq.backend.dto.EventResponse;
 import com.incidentiq.backend.entity.Event;
+import com.incidentiq.backend.messaging.EventMessage;
+import com.incidentiq.backend.messaging.EventProducer;
 import com.incidentiq.backend.repository.EventRepository;
 import com.incidentiq.backend.security.ApiKeyPrincipal;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,35 +16,17 @@ import java.util.UUID;
 
 @Service
 public class EventService {
-    private final EventRepository eventRepository;
-    public EventService(EventRepository eventRepository){
-        this.eventRepository=eventRepository;
+    private final EventProducer eventProducer;
+    public EventService(EventProducer  eventProducer){
+        this.eventProducer=eventProducer;
     }
-    public EventResponse ingest(ApiKeyPrincipal principal , CreateEventRequest request){
-        UUID tenantId=principal.tenantId();
-        String service=request.service().trim();
-        String externalId=normalize(request.externalId());
-        Instant occurredAt=request.occurredAt()!=null ?request.occurredAt(): Instant.now();
-        if(externalId!=null){
-            Optional<Event> existing=eventRepository.findByTenantIdAndServiceAndExternalId(tenantId,service,externalId);
-            if(existing.isPresent()){
-                return duplicate(existing.get());
-            }
-        }
-        Event event=new Event(tenantId,principal.apiKeyId(),service,request.severity(), request.message(), occurredAt,externalId);
-        try{
-            Event saved=eventRepository.save(event);
-            return new EventResponse(saved.getId(),"CREATED",saved.getReceivedAt());
-
-        }
-        catch(DataIntegrityViolationException e){
-            if(externalId==null){
-                throw e;
-            }
-            return eventRepository.findByTenantIdAndServiceAndExternalId(tenantId,service,externalId).map(this::duplicate).orElseThrow(()->e);
-        }
-
+    public EventResponse accept(ApiKeyPrincipal principal,CreateEventRequest request){
+        Instant now=Instant.now();
+        EventMessage message=new EventMessage(UUID.randomUUID(),principal.tenantId(),principal.apiKeyId(),request.service().trim(),request.severity(),request.message(),request.occurredAt()!=null ? request.occurredAt():now,now,normalize(request.externalId()));
+        eventProducer.publish(message);
+        return new EventResponse(message.eventId(),"ACCEPTED",now);
     }
+
     private EventResponse duplicate(Event existing){
         return new EventResponse(existing.getId(),"DUPLICATE",existing.getReceivedAt());
 

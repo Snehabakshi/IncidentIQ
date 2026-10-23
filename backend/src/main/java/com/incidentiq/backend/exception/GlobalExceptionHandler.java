@@ -58,5 +58,11 @@ public class GlobalExceptionHandler {
         problem.setTitle("Invalid request");
         return problem;
     }
+    @ExceptionHandler(EventPublishException.class)
+    public ProblemDetail handlePublishFailure(EventPublishException ex){
+        ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE,"Event could not be queued, please retry");
+        problem.setTitle("Event queue unavailable");
+        return problem;
+    }
 
 }
