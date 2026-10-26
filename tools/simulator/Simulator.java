@@ -131,7 +131,7 @@ public class Simulator{
                     try{
                         String severity=randomSeverity();
                         var response=post("/api/v1/events",eventJson(service,severity,messageFor(severity)),"X-API-KEY",apiKey);
-                        if(response.statusCode()==201){
+                        if(response.statusCode()==202){
                             sent.incrementAndGet();
                         }
                         else{
@@ -168,10 +168,10 @@ public class Simulator{
             String message="DB connection timeout after "+rnd.nextInt(2000,5000)+"ms on host db-"+rnd.nextInt(1,4);
             String json=eventJson(service,"ERROR",message,UUID.randomUUID().toString());
             var response=post("/api/v1/events",json,"X-API-Key",apiKey);
-            if(response.statusCode()==201) created++ ; else failed++;
+            if(response.statusCode()==202) created++ ; else failed++;
             if(rnd.nextDouble()<0.10){
                 var retry=post("/api/v1/events",json,"X-API-Key", apiKey);
-                if (retry.statusCode() == 200) duplicates++; else failed++;
+                if (retry.statusCode() == 202) duplicates++; else failed++;
             }
             Thread.sleep(rnd.nextLong(5, 40));
         }
