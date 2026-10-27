@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -73,5 +74,6 @@ public class Event {
     public String getSignature() { return signature; }
     public String getExternalId() { return externalId; }
     public UUID getIncidentId() { return incidentId; }
+
 
 }
