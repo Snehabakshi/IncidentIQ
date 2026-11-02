@@ -74,6 +74,9 @@ public class Event {
     public String getSignature() { return signature; }
     public String getExternalId() { return externalId; }
     public UUID getIncidentId() { return incidentId; }
-
+    public void assignToIncident(String signature,UUID incidentId){
+        this.signature=signature;
+        this.incidentId=incidentId;
+    }
 
 }
