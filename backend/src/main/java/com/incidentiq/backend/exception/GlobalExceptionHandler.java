@@ -64,5 +64,11 @@ public class GlobalExceptionHandler {
         problem.setTitle("Event queue unavailable");
         return problem;
     }
+    @ExceptionHandler(IncidentNotFoundException.class)
+    public ProblemDetail handleIncidentNotFound(IncidentNotFoundException ex) {
+        ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Incident not found");
+        return problem;
+    }
 
 }

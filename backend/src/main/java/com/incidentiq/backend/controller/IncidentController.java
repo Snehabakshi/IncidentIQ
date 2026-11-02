@@ -1,5 +1,7 @@
 package com.incidentiq.backend.controller;
 
+import com.incidentiq.backend.dto.EventSummary;
+import com.incidentiq.backend.dto.IncidentDetail;
 import com.incidentiq.backend.dto.IncidentSummary;
 import com.incidentiq.backend.dto.PageResponse;
 import com.incidentiq.backend.entity.IncidentStatus;
@@ -7,6 +9,7 @@ import com.incidentiq.backend.service.IncidentQueryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +32,19 @@ public class IncidentController {
     ){
         UUID tenantId=UUID.fromString(jwt.getClaimAsString("tenantId"));
         return incidentQueryService.list(tenantId, status, page, size);
+    }
+    @GetMapping("/{id}")
+    public IncidentDetail get(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt){
+        UUID tenantId=UUID.fromString(jwt.getClaimAsString("tenantId"));
+        return incidentQueryService.get(tenantId, id);
+    }
+    @GetMapping("/{id}/events")
+    public PageResponse<EventSummary> events(@PathVariable UUID id,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "50") int size,
+                                             @AuthenticationPrincipal Jwt jwt) {
+        UUID tenantId = UUID.fromString(jwt.getClaimAsString("tenantId"));
+        return incidentQueryService.listEvents(tenantId, id, page, size);
     }
 
 }

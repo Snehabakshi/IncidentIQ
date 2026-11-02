@@ -17,6 +17,7 @@ public interface IncidentRepository extends JpaRepository<Incident, UUID> {
     Optional<Incident> findByTenantIdAndServiceAndSignatureAndStatus(UUID tenantId, String service, String signature, IncidentStatus status);
     Page<Incident> findByTenantId(UUID tenantId, Pageable pageable);
     Page<Incident> findByTenantIdAndStatus(UUID tenantId,IncidentStatus status,Pageable pageable);
+    Optional<Incident> findByIdAndTenantId(UUID id,UUID tenantId);
     @Modifying
     @Query("""
         UPDATE Incident i
