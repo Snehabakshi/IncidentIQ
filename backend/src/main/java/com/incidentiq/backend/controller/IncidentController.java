@@ -1,5 +1,6 @@
 package com.incidentiq.backend.controller;
 
+import com.incidentiq.backend.ai.KnowledgeMatch;
 import com.incidentiq.backend.dto.EventSummary;
 import com.incidentiq.backend.dto.IncidentDetail;
 import com.incidentiq.backend.dto.IncidentSummary;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -58,6 +60,11 @@ public class IncidentController {
         UUID tenantId=UUID.fromString(jwt.getClaimAsString("tenantId"));
         UUID userId=UUID.fromString(jwt.getSubject());
         return incidentService.resolve(tenantId,userId,id,request.note());
+    }
+    @GetMapping("/{id}/similar")
+    public List<KnowledgeMatch> similar(@PathVariable UUID id,@RequestParam (defaultValue = "3") int limit, @AuthenticationPrincipal Jwt jwt){
+        UUID tenantId=UUID.fromString(jwt.getClaimAsString("tenantId"));
+        return incidentQueryService.similar(tenantId,id,limit);
     }
 
 }

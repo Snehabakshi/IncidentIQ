@@ -1,5 +1,6 @@
 package com.incidentiq.backend.service;
 
+import com.incidentiq.backend.ai.KnowledgeMatch;
 import com.incidentiq.backend.dto.EventSummary;
 import com.incidentiq.backend.dto.IncidentDetail;
 import com.incidentiq.backend.dto.IncidentSummary;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,9 +27,11 @@ public class IncidentQueryService {
     private static final int MAX_SIZE=100;
     private final IncidentRepository incidentRepository;
     private final EventRepository eventRepository;
-    public IncidentQueryService(IncidentRepository incidentRepository, EventRepository eventRepository){
+    private final knowledgeService knowledgeService;
+    public IncidentQueryService(IncidentRepository incidentRepository, EventRepository eventRepository, knowledgeService knowledgeService){
         this.incidentRepository=incidentRepository;
         this.eventRepository=eventRepository;
+        this.knowledgeService=knowledgeService;
     }
     @Transactional(readOnly=true)
     public PageResponse<IncidentSummary>list(UUID tenantId, IncidentStatus status,int page,int size){
@@ -59,5 +63,15 @@ public class IncidentQueryService {
                 result.getContent().stream().map(EventSummary::from).toList(),
                 result.getNumber(), result.getSize(),
                 result.getTotalElements(), result.getTotalPages());
+    }
+    @Transactional(readOnly = true)
+    public List<KnowledgeMatch> similar(UUID tenantId,UUID incidentId,int limit){
+        Incident incident=incidentRepository.findByIdAndTenantId(incidentId,tenantId).orElseThrow(()-> new IncidentNotFoundException(incidentId));
+        String text=incident.getService()+ ": " +incident.getTitle();
+        int safeLimit=Math.max(1,Math.min(limit,10));
+        return knowledgeService.findSimilar(tenantId,text,safeLimit).stream()
+                .filter(m -> !incidentId.equals(m.sourceId()))
+                .limit(safeLimit).toList();
+
     }
 }
