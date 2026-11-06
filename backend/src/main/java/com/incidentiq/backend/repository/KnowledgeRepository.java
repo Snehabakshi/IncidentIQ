@@ -3,15 +3,14 @@ package com.incidentiq.backend.repository;
 import com.incidentiq.backend.ai.KnowledgeMatch;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class knowledgeRepository {
+public class KnowledgeRepository {
     private final JdbcTemplate jdbcTemplate;
-    public knowledgeRepository(JdbcTemplate jdbcTemplate){
+    public KnowledgeRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate=jdbcTemplate;
     }
     public void upsert(UUID tenantId,String sourceType,UUID sourceId,String title,String content,float[]embedding){
@@ -52,4 +51,12 @@ public class knowledgeRepository {
         }
         return sb.append(']').toString();
     }
+    public int countByType(UUID tenantId,String sourceType){
+        Integer count=jdbcTemplate.queryForObject(
+                "SELECT count(*) FROM knowledge_items WHERE tenant_id= ? AND source_type = ?",
+                Integer.class,tenantId,sourceType
+        );
+        return count == null ? 0: count;
+    }
+
 }

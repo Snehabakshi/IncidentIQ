@@ -2,18 +2,21 @@ package com.incidentiq.backend.service;
 
 import com.incidentiq.backend.ai.EmbeddingClient;
 import com.incidentiq.backend.ai.KnowledgeMatch;
+import com.incidentiq.backend.ai.RunBook;
+import com.incidentiq.backend.ai.RunBookCatalog;
 import com.incidentiq.backend.entity.Incident;
-import com.incidentiq.backend.repository.knowledgeRepository;
+import com.incidentiq.backend.repository.KnowledgeRepository;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class knowledgeService {
+public class KnowledgeService {
     private final EmbeddingClient embeddingClient;
-    private final knowledgeRepository knowledgeRepository;
-    public knowledgeService(EmbeddingClient embeddingClient,knowledgeRepository knowledgeRepository){
+    private final KnowledgeRepository knowledgeRepository;
+    public KnowledgeService(EmbeddingClient embeddingClient, KnowledgeRepository knowledgeRepository){
         this.embeddingClient=embeddingClient;
         this.knowledgeRepository=knowledgeRepository;
     }
@@ -27,5 +30,19 @@ public class knowledgeService {
     }
     private String truncate(String s , int max){
         return s.length()<=max ?s : s.substring(0,max);
+    }
+    public void indexRunbook(UUID tenantId, RunBook runbook){
+        UUID sourceId=UUID.nameUUIDFromBytes(("runbook:" + runbook.slug()).getBytes(StandardCharsets.UTF_8));
+        String text=runbook.title()+". "+ runbook.content();
+        knowledgeRepository.upsert(tenantId,"RUNBOOK",sourceId,runbook.title(),text, embeddingClient.embed(text));
+
+    }
+    public void seedRunbooksIfMissing(UUID tenantId){
+        if(knowledgeRepository.countByType(tenantId,"RUNBOOK")>= RunBookCatalog.ALL.size()){
+            return;
+        }
+        for(RunBook runBook:RunBookCatalog.ALL){
+            indexRunbook(tenantId,runBook);
+        }
     }
 }

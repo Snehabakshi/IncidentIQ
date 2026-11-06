@@ -27,8 +27,8 @@ public class IncidentQueryService {
     private static final int MAX_SIZE=100;
     private final IncidentRepository incidentRepository;
     private final EventRepository eventRepository;
-    private final knowledgeService knowledgeService;
-    public IncidentQueryService(IncidentRepository incidentRepository, EventRepository eventRepository, knowledgeService knowledgeService){
+    private final KnowledgeService knowledgeService;
+    public IncidentQueryService(IncidentRepository incidentRepository, EventRepository eventRepository, KnowledgeService knowledgeService){
         this.incidentRepository=incidentRepository;
         this.eventRepository=eventRepository;
         this.knowledgeService=knowledgeService;

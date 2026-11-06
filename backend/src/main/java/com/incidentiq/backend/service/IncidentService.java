@@ -2,7 +2,6 @@ package com.incidentiq.backend.service;
 
 import com.incidentiq.backend.dto.IncidentDetail;
 import com.incidentiq.backend.entity.Incident;
-import com.incidentiq.backend.entity.IncidentStatus;
 import com.incidentiq.backend.exception.IncidentNotFoundException;
 import com.incidentiq.backend.repository.IncidentRepository;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,8 @@ import java.util.UUID;
 @Service
 public class IncidentService {
     private final IncidentRepository incidentRepository;
-    private final knowledgeService knowledgeService;
-    public IncidentService(IncidentRepository incidentRepository, knowledgeService knowledgeService){
+    private final KnowledgeService knowledgeService;
+    public IncidentService(IncidentRepository incidentRepository, KnowledgeService knowledgeService){
         this.incidentRepository=incidentRepository;
         this.knowledgeService=knowledgeService;
     }

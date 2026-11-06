@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Simulator{
-    static final String BASE_URL="http://localhost:8080";
+    static final String BASE_URL="http://localhost:8081";
     static final HttpClient CLIENT=HttpClient.newHttpClient();
     static final String[][] TENANTS = {
             // slug, company name, admin email, admin password, then the services
