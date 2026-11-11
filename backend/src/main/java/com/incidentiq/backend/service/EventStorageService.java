@@ -40,7 +40,7 @@ public class EventStorageService {
             }
             catch(DataIntegrityViolationException e){
                 if(isDuplicateExternalId(m)){
-                    log.info("Duplicate event skip  ped: tenant={}, service={}, externalId={}",
+                    log.info("Duplicate event skipped: tenant={}, service={}, externalId={}",
                             m.tenantId(), m.service(), m.externalId());
                     return;
                 }

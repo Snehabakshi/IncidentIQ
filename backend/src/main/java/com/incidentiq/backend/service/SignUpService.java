@@ -22,10 +22,12 @@ public class SignUpService {
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public SignUpService(TenantRepository tenantRepository,UserRepository userRepository, PasswordEncoder passwordEncoder){
+    private final KnowledgeService knowledgeService;
+    public SignUpService(TenantRepository tenantRepository,UserRepository userRepository, PasswordEncoder passwordEncoder, KnowledgeService knowledgeService){
         this.passwordEncoder=passwordEncoder;
         this.userRepository=userRepository;
         this.tenantRepository=tenantRepository;
+        this.knowledgeService=knowledgeService;
     }
 
     @Transactional
@@ -38,8 +40,9 @@ public class SignUpService {
         if(userRepository.existsByEmail(email)){
             throw new EmailAlreadyExistsException(email);
         }
-        Tenant tenant=tenantRepository.save(new Tenant(companyName));
+        Tenant tenant=tenantRepository.saveAndFlush(new Tenant(companyName));
         User admin=userRepository.save(new User(email, passwordEncoder.encode(request.password()), Role.ADMIN,tenant.getId()));
+        knowledgeService.seedRunbooksIfMissing(tenant.getId());
         return new SignUpResponse(TenantResponse.from(tenant), UserResponse.from(admin));
     }
 }
