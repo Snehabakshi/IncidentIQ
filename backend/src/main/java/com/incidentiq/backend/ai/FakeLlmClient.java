@@ -1,8 +1,11 @@
 package com.incidentiq.backend.ai;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class FakeLlmClient implements LlmClient{
     @Override
     public String complete(String prompt){

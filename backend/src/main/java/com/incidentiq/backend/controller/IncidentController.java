@@ -6,9 +6,11 @@ import com.incidentiq.backend.dto.IncidentDetail;
 import com.incidentiq.backend.dto.IncidentSummary;
 import com.incidentiq.backend.dto.PageResponse;
 import com.incidentiq.backend.dto.ResolveIncidentRequest;
+import com.incidentiq.backend.dto.SuggestionResponse;
 import com.incidentiq.backend.entity.IncidentStatus;
 import com.incidentiq.backend.service.IncidentQueryService;
 import com.incidentiq.backend.service.IncidentService;
+import com.incidentiq.backend.service.SuggestionService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -28,9 +30,11 @@ import java.util.UUID;
 public class IncidentController {
     private final IncidentQueryService incidentQueryService;
     private final IncidentService incidentService;
-    public IncidentController(IncidentQueryService incidentQueryService, IncidentService incidentService){
+    private final SuggestionService suggestionService;
+    public IncidentController(IncidentQueryService incidentQueryService, IncidentService incidentService, SuggestionService suggestionService){
         this.incidentQueryService=incidentQueryService;
         this.incidentService=incidentService;
+        this.suggestionService=suggestionService;
     }
     @GetMapping
     public PageResponse<IncidentSummary>list(
@@ -66,5 +70,9 @@ public class IncidentController {
         UUID tenantId=UUID.fromString(jwt.getClaimAsString("tenantId"));
         return incidentQueryService.similar(tenantId,id,limit);
     }
-
+    @PostMapping("/{id}/suggestion")
+    public SuggestionResponse suggestion(@PathVariable UUID id,@AuthenticationPrincipal Jwt jwt){
+        UUID tenantId=UUID.fromString(jwt.getClaimAsString("tenantId"));
+        return suggestionService.suggest(tenantId,id);
+    }
 }
