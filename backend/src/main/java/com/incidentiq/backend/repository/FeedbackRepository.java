@@ -14,7 +14,7 @@ public class FeedbackRepository {
     public void upsert(UUID tenantId,UUID suggestionId,UUID userId,String rating,String comment){
         jdbcTemplate.update("""
                 INSERT INTO suggestion_feedback (tenant_id,suggestion_id,user_id,rating,comment)
-                VALUES(?,?,?,?)
+                VALUES(?,?,?,?,?)
                 ON CONFLICT(suggestion_id,user_id)
                 DO UPDATE SET rating=EXCLUDED.rating,
                               comment=EXCLUDED.comment,
