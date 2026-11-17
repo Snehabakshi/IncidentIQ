@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 public class SuggestionServiceTest {
-    private final SuggestionService service=new SuggestionService(null,new FakeLlmClient());
+    private final SuggestionService service=new SuggestionService(null,new FakeLlmClient(),null,null);
     private IncidentDetail incident(){
         return new IncidentDetail(UUID.randomUUID(), "checkout-api","DB connection timeout after <num>ms", Severity.ERROR, IncidentStatus.OPEN,10, Instant.now(),Instant.now(),null,null,null);
     }

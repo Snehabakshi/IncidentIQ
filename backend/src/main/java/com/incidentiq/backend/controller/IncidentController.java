@@ -71,8 +71,8 @@ public class IncidentController {
         return incidentQueryService.similar(tenantId,id,limit);
     }
     @PostMapping("/{id}/suggestion")
-    public SuggestionResponse suggestion(@PathVariable UUID id,@AuthenticationPrincipal Jwt jwt){
+    public SuggestionResponse suggestion(@PathVariable UUID id,@RequestParam(defaultValue = "false") boolean refresh,@AuthenticationPrincipal Jwt jwt){
         UUID tenantId=UUID.fromString(jwt.getClaimAsString("tenantId"));
-        return suggestionService.suggest(tenantId,id);
+        return suggestionService.suggest(tenantId,id,refresh);
     }
 }

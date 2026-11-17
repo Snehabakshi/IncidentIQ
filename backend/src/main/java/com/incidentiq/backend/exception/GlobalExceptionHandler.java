@@ -70,5 +70,11 @@ public class GlobalExceptionHandler {
         problem.setTitle("Incident not found");
         return problem;
     }
+    @ExceptionHandler(SuggestionNotFoundException.class)
+    public ProblemDetail handleSuggestionNotFound(SuggestionNotFoundException ex){
+        ProblemDetail problem=ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,ex.getMessage());
+        problem.setTitle("Suggestion Not Found");
+        return problem;
+    }
 
 }

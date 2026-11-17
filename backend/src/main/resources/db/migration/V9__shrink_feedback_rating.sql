@@ -1,0 +1,1 @@
+ALTER TABLE suggestion_feedback ALTER COLUMN rating TYPE VARCHAR(20);
